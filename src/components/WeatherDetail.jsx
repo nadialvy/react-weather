@@ -13,29 +13,37 @@ const WeatherDetail = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const aborter = new AbortController();
     async function fetchData(){
       setLoading(true);
       try{
         const res = await fetch(`https://api.api-ninjas.com/v1/weather?lat=${latitude}&lon=${longitude}`, {
           headers: {
             'x-api-key': 'L6rl0+ZwmtQuuqvkCa+8RA==w0nhShb8KMbkvbTv'
-          }
+          },
+          signal: aborter.signal
         });
         setLoading(false);
         setError(null);
         const data = await res.json();
         setWeather(data);
+        console.log(data);
       }catch(err){
-        setError(err.message);
-        setLoading(false);
-        console.log(err);
+        if(err.name === 'AbortError'){
+          console.log('fetch aborted');
+        }else{
+          setLoading(false);
+          setError(err.message);
+          console.log(err);
+        }
       }
     }
 
     if (latitude && longitude && !weather) {
       fetchData();
-      console.log('hit api');
     }
+
+    return () => aborter.abort();
 
   }, [latitude, longitude, weather])
 
@@ -109,7 +117,7 @@ const WeatherDetail = () => {
   }
 
   return (
-    <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative">
+    <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative h-screen">
       {error && <div className="flex justify-center items-center h-screen text-lg text-red-700 font-semibold">{error}</div>}
       {loading && <div className="flex justify-center items-center h-screen text-lg text-blue-700 font-semibold">Loading...</div>}
       {weather != null &&
