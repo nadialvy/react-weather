@@ -28,15 +28,13 @@ const WeatherDetail = () => {
         const data = await res.json();
         setWeather(data);
         if(data.error) setError(data.error);
-        console.log(data.error);
-        console.log(error)
       }catch(err){
         if(err.name === 'AbortError'){
           console.log('Fetch aborted');
+          return;
         }else{
           setLoading(false);
           setError(err);
-          console.log(err);
         }
       }
     }
