@@ -16,8 +16,6 @@ const Home = () => {
         setMatchCities((matchCities) => [...matchCities, el]);
       }
     })
-    console.log(searchQuery);
-    console.log(matchCities);
   }
 
   return (
