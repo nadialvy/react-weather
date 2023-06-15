@@ -27,12 +27,15 @@ const WeatherDetail = () => {
         setError(null);
         const data = await res.json();
         setWeather(data);
+        if(data.error) setError(data.error);
+        console.log(data.error);
+        console.log(error)
       }catch(err){
         if(err.name === 'AbortError'){
           console.log('Fetch aborted');
         }else{
           setLoading(false);
-          setError(err.message);
+          setError(err);
           console.log(err);
         }
       }
@@ -117,9 +120,15 @@ const WeatherDetail = () => {
 
   return (
     <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative h-screen">
-      {error && <div className="flex justify-center items-center h-screen text-lg text-red-700 font-semibold">{error}</div>}
+      { error &&
+        <div className="text-center flex items-center m-auto h-screen text-lg">
+          <div>
+            <p className="text-red-700">{error}</p>
+            <p className="font-semibold hover:cursor-pointer" onClick={() => navigate('/')}>Back to home</p>
+          </div>
+        </div>}
       {loading && <div className="flex justify-center items-center h-screen text-lg text-blue-700 font-semibold">Loading...</div>}
-      {weather != null &&
+      {weather != null && !weather.error &&
         <div className="z-40 mx-24 my-12 max-w-lg border border-slate-400 border-opacity-40 bg-white bg-opacity-20 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <img onClick={() => navigate('/')} src="/icon/left-arrow.png" alt="Back" className="w-7 hover:cursor-pointer"/>
