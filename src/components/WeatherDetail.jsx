@@ -119,7 +119,7 @@ const WeatherDetail = () => {
   }
 
   return (
-    <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative xl:h-screen">
+    <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative">
       { error &&
         <div className="text-center flex items-center m-auto lg:h-screen text-lg">
           <div>
