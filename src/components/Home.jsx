@@ -1,21 +1,52 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import data from '../data/cities.json';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [matchCities, setMatchCities] = useState([]);
+  const [error, setError] = useState(null);
+
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [citiesPerPage] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
-    event.preventDefault();
-    setMatchCities([]);
+  }
 
-    data.data.cities.forEach((el) => {
-      if(el.name.toLowerCase().includes(searchQuery.toLowerCase())){
-        setMatchCities((matchCities) => [...matchCities, el]);
+  useEffect(() => {
+    const fetchCities = () => {
+      try{
+        setMatchCities([]);
+        const filteredCities = data.data.cities.filter((el) =>
+          el.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        if(!filteredCities) return;
+
+        // count total pages
+        const total = Math.ceil(filteredCities.length/citiesPerPage);
+        setTotalPages(total);
+
+        // get data that suitable with current page
+        const indexOfLastItem = currentPage * citiesPerPage;
+        const indexOfFirstItem = indexOfLastItem - citiesPerPage;
+        const currentItems = filteredCities.slice(indexOfFirstItem, indexOfLastItem);
+
+        // set match cities
+        setMatchCities(currentItems);
+      } catch(err){
+        setError(err);
       }
-    })
+    }
+
+    fetchCities();
+  }, [searchQuery, currentPage, citiesPerPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   }
 
   return (
@@ -31,10 +62,10 @@ const Home = () => {
         </div>
       </div>
 
+      {error && <div className='text-center mt-10 font-semibold text-red-500 text-xl'>Error: {error.message}</div>}
+
       {
-        searchQuery == '' && matchCities.length == 0
-        ? <div></div>
-        : searchQuery != '' && matchCities.length == 0
+        searchQuery != '' && matchCities.length == 0
           ? <div className='text-center mt-10 font-semibold text-red-500 text-xl'>No data</div>
           : <div className='flex flex-wrap items-center justify-center'>
               {matchCities.map((city) => (
@@ -49,8 +80,16 @@ const Home = () => {
           </div>
       }
 
+      {/* pagination nav */}
+      <div className='flex justify-between items-center mx-12'>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className='disabled:bg-opacity-50 bg-slate-300 px-4 py-2 rounded-lg disabled:cursor-not-allowed'>
+          Previous
+        </button>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className='disabled:bg-opacity-50 bg-slate-300 px-4 py-2 rounded-lg disabled:cursor-not-allowed'>
+          Next
+        </button>
+      </div>
     </div>
-
    );
 }
 

@@ -47,7 +47,7 @@ const WeatherDetail = () => {
 
     return () => aborter.abort();
 
-  }, [latitude, longitude, weather])
+  }, [latitude, longitude, weather, error])
 
 
   const getWeatherCondition = (weather) => {
