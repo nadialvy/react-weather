@@ -119,9 +119,9 @@ const WeatherDetail = () => {
   }
 
   return (
-    <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative h-screen">
+    <div className="flex items-center justify-center overflow-hidden bg-[#D2D8E3] relative xl:h-screen">
       { error &&
-        <div className="text-center flex items-center m-auto h-screen text-lg">
+        <div className="text-center flex items-center m-auto lg:h-screen text-lg">
           <div>
             <p className="text-red-700">{error}</p>
             <p className="font-semibold hover:cursor-pointer" onClick={() => navigate('/')}>Back to home</p>
@@ -129,31 +129,35 @@ const WeatherDetail = () => {
         </div>}
       {loading && <div className="flex justify-center items-center h-screen text-lg text-blue-700 font-semibold">Loading...</div>}
       {weather != null && !weather.error &&
-        <div className="z-40 mx-24 my-12 max-w-lg border border-slate-400 border-opacity-40 bg-white bg-opacity-20 rounded-xl p-4">
+        <div className="z-40 mx-10 my-12 sm:mx-24 sm:my-16 md:mx-36 lg:mx-48 w-full lg:max-w-lg border border-slate-400 border-opacity-40 bg-white bg-opacity-20 rounded-xl p-4 sm:p-8 xl:my-12">
+          {/* title */}
           <div className="flex items-center justify-between">
-            <img onClick={() => navigate('/')} src="/icon/left-arrow.png" alt="Back" className="w-7 hover:cursor-pointer"/>
-            <p className="text-3xl text-center font-bold mt-4">{region}</p>
+            <img onClick={() => navigate('/')} src="/icon/left-arrow.png" alt="Back" className="w-3 sm:w-5 md:w-6 hover:cursor-pointer" />
+            <p className="text-2xl sm:text-3xl lg:text-3xl text-center font-semibold">{region}</p>
             <p></p>
           </div>
-          <img src={getWeatherCondition(weather).iconPath} alt="Weather Icon" className="w-3/4 m-auto"/>
-          <div className="flex items-start justify-center">
-            <p className="text-8xl font-semibold text-center">{weather.temp}</p>
-            <p className="text-5xl font-semibold">°</p>
-          </div>
-          <p className="text-center text-2xl text-gray-600">{getWeatherCondition(weather).main}</p>
-          <p className="text-center text-lg mt-3 px-6">{getWeatherCondition(weather).description}</p>
 
-          <div className="flex flew-wrap justify-around items-center gap-x-2 my-10">
+          <img src={getWeatherCondition(weather).iconPath} alt="Weather Icon" className="w-3/4 m-auto my-4 md:my-6 lg:my-10"/>
+          <div className="flex items-start justify-center">
+            <p className="text-5xl sm:text-6xl lg:text-8xl font-semibold text-center">{weather.temp}</p>
+            <p className="text-3xl lg:text-5xl">°</p>
+          </div>
+
+          <p className="text-center text-xl lg:text-2xl text-gray-600">{getWeatherCondition(weather).main}</p>
+          <p className="text-center lg:text-xl mt-5 px-2 text-gray-800">{getWeatherCondition(weather).description}</p>
+
+          <div className="grid grid-cols-2 xl:grid-cols-4 xl:gap-1 gap-4 mt-10 my-2">
             <CardSubDetailWeather iconPath="/icon/humidity.png" alt="Humidity" desc={weather.humidity} title="Humidity"/>
             <CardSubDetailWeather iconPath="/icon/wind.png" alt="Wind" desc={weather.wind_speed} title="Wind"/>
             <CardSubDetailWeather iconPath="/icon/sunrise.png" alt="Sunrise" desc={getFormattedTime(weather.sunrise)} title="Sunrise"/>
             <CardSubDetailWeather iconPath="/icon/sunset.png" alt="Sunset" desc={getFormattedTime(weather.sunset)} title="Sunset"/>
           </div>
 
+
         </div>
       }
-      <img src="/bg/orange-ellipse.svg" alt="" className="opacity-50 absolute right-[750px] bottom-[10px]"/>
-      <img src="/bg/blue-ellipse.svg" alt="" className="absolute left-[750px] top-[10px] object-fill"/>
+      <img src="/bg/orange-ellipse.svg" alt="" className="opacity-75 scale-150 absolute right-[180px] bottom-[630px] xl:right-[750px] xl:bottom-[10px]"/>
+      <img src="/bg/blue-ellipse.svg" alt="" className="absolute scale-150 left-[180px] top-[630px] xl:left-[750px] xl:top-[10px]"/>
     </div>
   );
 }
